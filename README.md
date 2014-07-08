@@ -15,10 +15,21 @@ Here: http://www.esrl.noaa.gov/gmd/grad/solcalc/azel.html
 
 Usage:
 ```
-lat = 
-sun_position(2014,7,1, lat=-11.953349, longitude=-76.992187) # returns azimuth and elevation for noon(GMT) on July1 2014
+lat = -11.953349
+lon = -76.992187
+# returns azimuth and elevation for noon(GMT) on July1 2014
+sun_position(2014,7,1, lat=lat, longitude=lon)
+# can also define time.
+sun_position(year, month, day, hour=12, minute=0, sec=0, lat=46.5, longitude=6.5)
 
-latlong_str_conversion("38°43'26.724N 9°8'26.25W") # converts to lat, long as floats for input to sun_position
+# converts input string in NSEW notation into lat, long as floats
+# - for input to sun_position
+latlong_str_conversion("38°43'26.724N 9°8'26.25W")
+# also accepts extra spaces, missing seconds, decimal minutes.
+# E.g.
+#  "11° 57.200964S  76° 59.53125W"
+#  "38.72409°N 9.140625°W"
 
-latlong_float_conversion(-11.953349, -76.992187) # returns the string versio of lat long in NSEW notation shown above.
+# returns the string version of lat long in NSEW notation shown above.
+latlong_float_conversion(-11.953349, -76.992187)
 ```
