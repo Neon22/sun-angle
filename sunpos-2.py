@@ -21,20 +21,20 @@
 # Samples site:
 #    - http://www.findlatitudeandlongitude.com/
 # E.g. These are equivalent - for Lisbon in Portugal.
-#   Latitude:N 38° 43' 26.7257"
-#   Longitude:W 9° 8' 26.25"
-#   Latitude:N 38° 43.445428'
-#   Longitude:W 9° 8.4375'
-#   Latitude:38.72409°
-#   Longitude:-9.140625°
+#   Latitude:N 38Â° 43' 26.7257"
+#   Longitude:W 9Â° 8' 26.25"
+#   Latitude:N 38Â° 43.445428'
+#   Longitude:W 9Â° 8.4375'
+#   Latitude:38.72409Â°
+#   Longitude:-9.140625Â°
 #
 # for Lima Peru
-#   Latitude:S 11° 57' 12.0578"
-#   Longitude:W 76° 59' 31.875"
-#   Latitude:S 11° 57.200964'
-#   Longitude:W 76° 59.53125'
-#   Latitude:-11.953349°
-#   Longitude:-76.992187°
+#   Latitude:S 11Â° 57' 12.0578"
+#   Longitude:W 76Â° 59' 31.875"
+#   Latitude:S 11Â° 57.200964'
+#   Longitude:W 76Â° 59.53125'
+#   Latitude:-11.953349Â°
+#   Longitude:-76.992187Â°
 
 
 import math, re
@@ -78,7 +78,7 @@ def latlong_float_conversion(latitude, longitude):
     lat_s = present_seconds(lat_s)
     lon_s = present_seconds(lon_s)
     #
-    res = "%d°%d'%s%s %d°%d'%s%s" % (lat_d, lat_m, lat_s, lat, lon_d, lon_m, lon_s, lon)
+    res = "%dÂ°%d'%s%s %dÂ°%d'%s%s" % (lat_d, lat_m, lat_s, lat, lon_d, lon_m, lon_s, lon)
     return res
 
 def parse_digits(value):
@@ -127,15 +127,19 @@ def latlong_str_conversion(latlong):
     longitude = lon_tuple[0]+lon_tuple[1]/60.0 + lon_tuple[2]/3600.0
     if w > 0: longitude = -longitude
     return (latitude, longitude)
-    
-    
 
 def leapyear(year):  
     if year % 400 == 0:   return True
     elif year % 100 == 0: return False  
     elif year % 4 == 0:   return True  
     else: return False
-    
+
+def leapYearsSince1949(year):
+    leapYearsTo1949 = 472 # Number of leap years is theoretical based on current leap year rules.
+    leapDaysInAYear = 0.2425
+    leapYearsToGivenYear = int(year * leapDaysInAYear)
+    leapYearsBetweenYears = leapYearsToGivenYear - leapYearsTo1949
+    return leapYearsBetweenYears
 
 def calc_time(year, month, day, hour=12, minute=0, sec=0):
     # Get day of the year, e.g. Feb 1 = 32, Mar 1 = 61 on leap years
@@ -147,13 +151,12 @@ def calc_time(year, month, day, hour=12, minute=0, sec=0):
     # Get Julian date - 2400000
     hour = hour + minute / 60.0 + sec / 3600.0 # hour plus fraction
     delta = year - 1949
-    leap = delta // 4 # former leapyears
-    jd = 32916.5 + delta * 365 + leap + day + hour / 24.0
+    leap = leapYearsSince1949(year) # former leapyears
+    jd = 32916.5 + (delta * 365) + leap + day + (hour / 24.0)
     # The input to the Astronomer's almanac is the difference between
     # the Julian date and JD 2451545.0 (noon, 1 January 2000)
     time = jd - 51545
     return time
-
 
 def meanLongitudeDegrees(time):
     return ((280.460 + 0.9856474 * time) % 360)
@@ -291,13 +294,13 @@ if __name__ == '__main__':
         print lat, lon, "=", latlong_float_conversion(lat, lon)
     #
     print "\nTesting string parsing"
-    latlong = ["38°43'26.724N 9°8'26.25W",
-               "33°7'30S 33°7'30W",
-               "38° 43' 26.724 N 9° 8' 26.25 W",
-               "33° 7' 30 S 33°7W",
-               "11° 57' 12.0578S  76° 59' 31.875 W",
-               "11° 57.200964S  76° 59.53125W",
-               "38.72409°N 9.140625°W"
+    latlong = ["38Â°43'26.724N 9Â°8'26.25W",
+               "33Â°7'30S 33Â°7'30W",
+               "38Â° 43' 26.724 N 9Â° 8' 26.25 W",
+               "33Â° 7' 30 S 33Â°7W",
+               "11Â° 57' 12.0578S  76Â° 59' 31.875 W",
+               "11Â° 57.200964S  76Â° 59.53125W",
+               "38.72409Â°N 9.140625Â°W"
                ]
     for s in latlong:
         print s
